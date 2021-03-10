@@ -39,3 +39,11 @@ void Clock::setTime(unsigned long unixTime) {
   Serial.println(unixTime);
   rtc.adjust(DateTime(unixTime));
 }
+
+String Clock::report() {
+  String output = "\"clock\":{";
+  output +=   "\"time\":\"" + rtc.now().timestamp() + "\",";
+  output +=   "\"temp\":" + String(rtc.getTemperature());
+  output += "}";
+  return output;
+}

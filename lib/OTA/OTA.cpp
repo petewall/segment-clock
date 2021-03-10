@@ -8,7 +8,7 @@
 OTA::OTA(unsigned long interval)
 : PeriodicAction(interval) {}
 
-void OTA::run() {
+bool OTA::run() {
   WiFiClient client;
 
   ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
@@ -25,4 +25,5 @@ void OTA::run() {
       Serial.println("[OTA] Updated!"); // may not be called since we reboot the ESP
       break;
   }
+  return true;
 }

@@ -2,17 +2,17 @@
 #define __SEGMENT_CLOCK_NTP_H__
 
 #include <PeriodicAction.h>
-#include <RTClib.h>
+#include <Clock.h>
 
 class NTP : public PeriodicAction {
 public:
-  explicit NTP(unsigned long interval, RTC_DS3231* rtc);
+  explicit NTP(unsigned long interval, Clock* clock);
 
 protected:
-  void run() override;
+  bool run() override;
 
 private:
-  RTC_DS3231* rtc;
+  Clock* clock;
 };
 
 #endif // __SEGMENT_CLOCK_NTP_H__

@@ -8,7 +8,7 @@ public:
   explicit OTA(unsigned long interval);
 
 protected:
-  void run() override;
+  bool run() override;
 };
 
 #endif // __SEGMENT_CLOCK_OTA_H__

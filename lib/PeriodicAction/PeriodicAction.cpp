@@ -6,7 +6,8 @@ PeriodicAction::PeriodicAction(unsigned long interval)
 
 void PeriodicAction::check(unsigned long millis) {
   if (millis > this->next) {
-    this->next = millis + this->interval;
-    this->run();
+    if (this->run()) {
+      this->next = millis + this->interval;
+    }
   }
 }

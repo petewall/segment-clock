@@ -28,3 +28,9 @@ check: ${SRC_FILES}
 
 upload:
 	$(call invoke-pio,run,--target,upload)
+
+set-pipeline:
+	fly -t wallhouse set-pipeline \
+		--load-vars-from ../secrets/pipeline-creds.json \
+		--pipeline segment-clock \
+		--config ci/pipeline.yaml

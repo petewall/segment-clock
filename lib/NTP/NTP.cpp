@@ -1,23 +1,25 @@
 #include "NTP.h"
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
+NTP::NTP(unsigned long interval, Clock* clock)
+: PeriodicAction(interval), clock(clock) {}
 
-NTP::NTP(unsigned long interval, RTC_DS3231* rtc)
-: PeriodicAction(interval), rtc(rtc) {}
+bool NTP::run() {
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiUDP client;
+    NTPClient ntpClient(client, "pool.ntp.org");
 
-void NTP::run() {
-  Serial.println("[NTP] Getting time...");
-  WiFiUDP client;
-  NTPClient ntpClient(client, "pool.ntp.org");
-
-  ntpClient.update();
-  rtc->adjust(DateTime(ntpClient.getEpochTime()));
-  Serial.print("[NTP] Time is ");
-
-  char date[10] = "hh:mm:ss";
-  rtc->now().toString(date);
-
-  Serial.println(date);
+    Serial.println("[NTP] Getting time...");
+    if (ntpClient.update()) {
+      clock->setTime(ntpClient.getEpochTime());
+      Serial.println("[NTP] Done.");
+      return true;
+    } else {
+      Serial.println("[NTP] Failed to get time.");
+    }
+  }
+  return false;
 }

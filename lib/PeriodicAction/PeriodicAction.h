@@ -7,7 +7,7 @@ public:
   virtual void check(unsigned long millis);
 
 protected:
-  virtual void run() = 0;
+  virtual bool run() = 0;
 
 private:
   unsigned long interval;

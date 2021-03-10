@@ -2,7 +2,7 @@
 platform: linux
 
 params:
-  FIRMWARE_TYPE: segment_clock
+  FIRMWARE_TYPE: segment-clock
   OTA_HOST:
   WIFI_SSID:
   WIFI_PASSWORD:

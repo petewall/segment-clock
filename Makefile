@@ -4,7 +4,7 @@ clean:
 	rm -rf .pio
 
 SRC_FILES := $(shell find . -path ./test -prune -false -o -name "*.cpp" -o -name "*.h")
-TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
+# TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
 
 define invoke-pio
 	FIRMWARE_VERSION="${FIRMWARE_VERSION}" \
@@ -14,8 +14,8 @@ define invoke-pio
 		pio $1 --environment segment-clock $2 $3
 endef
 
-test: build ${TEST_FILES}
-	$(call invoke-pio,test,--verbose)
+# test: build ${TEST_FILES}
+# 	$(call invoke-pio,test,--verbose)
 
 .pio/build/segment-clock/firmware.bin: platformio.ini ${SRC_FILES}
 	$(call invoke-pio,run)

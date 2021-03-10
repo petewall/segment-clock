@@ -7,6 +7,7 @@ SRC_FILES := $(shell find . -path ./test -prune -false -o -name "*.cpp" -o -name
 # TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
 
 define invoke-pio
+	FIRMWARE_TYPE="${FIRMWARE_TYPE}" \
 	FIRMWARE_VERSION="${FIRMWARE_VERSION}" \
 	OTA_HOST="http://wallserver.local:8266" \
 	WIFI_SSID="${WIFI_SSID}" \

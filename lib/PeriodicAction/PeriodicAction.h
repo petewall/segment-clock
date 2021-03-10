@@ -1,5 +1,5 @@
-#ifndef __SEGMENT_CLOCK_BOOTLOADER_PERIODIC_ACTION_H__
-#define __SEGMENT_CLOCK_BOOTLOADER_PERIODIC_ACTION_H__
+#ifndef __SEGMENT_CLOCK_PERIODIC_ACTION_H__
+#define __SEGMENT_CLOCK_PERIODIC_ACTION_H__
 
 class PeriodicAction {
 public:
@@ -14,4 +14,4 @@ private:
   unsigned long next;
 };
 
-#endif // __SEGMENT_CLOCK_BOOTLOADER_PERIODIC_ACTION_H__
+#endif // __SEGMENT_CLOCK_PERIODIC_ACTION_H__

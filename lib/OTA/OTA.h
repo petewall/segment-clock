@@ -1,5 +1,5 @@
-#ifndef __SEGMENT_CLOCK_BOOTLOADER_OTA_H__
-#define __SEGMENT_CLOCK_BOOTLOADER_OTA_H__
+#ifndef __SEGMENT_CLOCK_OTA_H__
+#define __SEGMENT_CLOCK_OTA_H__
 
 #include <PeriodicAction.h>
 
@@ -11,4 +11,4 @@ protected:
   void run() override;
 };
 
-#endif // __SEGMENT_CLOCK_BOOTLOADER_OTA_H__
+#endif // __SEGMENT_CLOCK_OTA_H__

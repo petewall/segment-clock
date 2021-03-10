@@ -44,5 +44,5 @@ void loop() {
   checkWifi();
   ntp->check(now);
   rtClock->check();
-  // ota->check(now);
+  ota->check(now);
 }

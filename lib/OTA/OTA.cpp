@@ -1,7 +1,8 @@
 #include "OTA.h"
 #include <Arduino.h>
-#include <WiFiClient.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266httpUpdate.h>
+#include <WiFiClient.h>
 
 #define OTA_URL OTA_HOST "/api/update?firmware=" FIRMWARE_TYPE "&version=" FIRMWARE_VERSION
 
@@ -9,6 +10,10 @@ OTA::OTA(unsigned long interval)
 : PeriodicAction(interval) {}
 
 bool OTA::run() {
+  if (WiFi.status() != WL_CONNECTED) {
+    return false;
+  }
+
   WiFiClient client;
 
   ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);

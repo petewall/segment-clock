@@ -8,18 +8,20 @@ NTP::NTP(unsigned long interval, Clock* clock)
 : PeriodicAction(interval), clock(clock) {}
 
 bool NTP::run() {
-  if (WiFi.status() == WL_CONNECTED) {
-    WiFiUDP client;
-    NTPClient ntpClient(client, "pool.ntp.org");
+  if (WiFi.status() != WL_CONNECTED) {
+    return false;
+  }
 
-    Serial.println("[NTP] Getting time...");
-    if (ntpClient.update()) {
-      clock->setTime(ntpClient.getEpochTime());
-      Serial.println("[NTP] Done.");
-      return true;
-    } else {
-      Serial.println("[NTP] Failed to get time.");
-    }
+  WiFiUDP client;
+  NTPClient ntpClient(client, "pool.ntp.org");
+
+  Serial.println("[NTP] Getting time...");
+  if (ntpClient.update()) {
+    clock->setTime(ntpClient.getEpochTime());
+    Serial.println("[NTP] Done.");
+    return true;
+  } else {
+    Serial.println("[NTP] Failed to get time.");
   }
   return false;
 }

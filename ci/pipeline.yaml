@@ -79,7 +79,7 @@ jobs:
             - check
         - get: version
           params:
-            bump: final
+            bump: patch
         - get: source
           passed:
             - check
@@ -99,8 +99,6 @@ jobs:
           TYPE: segment-clock
       - put: version
         params:
-          bump: patch
-          pre: dev
           file: version/version
 
   # - name: test-pull-request

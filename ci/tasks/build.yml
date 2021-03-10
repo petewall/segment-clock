@@ -1,0 +1,27 @@
+---
+platform: linux
+
+params:
+  FIRMWARE_TYPE: segment_clock
+  OTA_HOST:
+  WIFI_SSID:
+  WIFI_PASSWORD:
+
+inputs:
+  - name: source
+  - name: version
+
+outputs:
+  - name: binaries
+
+run:
+  path: sh
+  dir: source
+  args:
+    - -exc
+    - |
+      export FIRMWARE_VERSION=$(cat ../version/version)
+      make build
+
+      cp .pio/build/${FIRMWARE_TYPE}/firmware.bin \
+        ../binaries/${FIRMWARE_TYPE}-${FIRMWARE_VERSION}.bin

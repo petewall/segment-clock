@@ -72,14 +72,17 @@ jobs:
             args: ["check"]
 
   - name: build-firmware
+    serial_groups: [version]
     plan:
       - in_parallel:
         - get: platformio
           passed:
             - check
         - get: version
+          passed:
+            - bump-minor-version
           params:
-            bump: patch
+            bump: final
         - get: source
           passed:
             - check
@@ -99,7 +102,16 @@ jobs:
           TYPE: segment-clock
       - put: version
         params:
+          bump: patch
+          pre: dev
           file: version/version
+
+  - name: bump-minor-version
+    serial_groups: [version]
+    plan:
+      - put: version
+        params:
+          bump: minor
 
   # - name: test-pull-request
   #   plan:

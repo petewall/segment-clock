@@ -1,7 +1,7 @@
 .PHONY: build clean test
 
 clean:
-	rm -rf .pio
+	rm -rf .pio data
 
 SRC_FILES := $(shell find . -path ./test -prune -false -o -name "*.cpp" -o -name "*.h")
 # TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
@@ -29,6 +29,26 @@ check: ${SRC_FILES}
 upload:
 	$(call invoke-pio,run,--target,upload)
 
+upload-fs: build-client
+	$(call invoke-pio,run,--target,uploadfs)
+
+# Client targets
+
+client-deps: client/node_modules/.deps-pulled
+client/node_modules/.deps-pulled:
+	cd client && yarn install
+	touch client/node_modules/.deps-pulled
+
+# test-client: client-deps
+# 	yarn
+
+build-client: data/index.htm
+data/index.htm: client-deps
+	mkdir -p data
+	cp client/actions.js client/index.htm client/style.css client/node_modules/jquery/dist/jquery.min.js data/
+
+
+# CI targets
 set-pipeline:
 	fly -t wallhouse set-pipeline \
 		--load-vars-from ../secrets/pipeline-creds.json \

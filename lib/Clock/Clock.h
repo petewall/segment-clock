@@ -1,14 +1,17 @@
 #ifndef __SEGMENT_CLOCK_CLOCK_H__
 #define __SEGMENT_CLOCK_CLOCK_H__
 
-#include <Reportable.h>
+#include <WString.h>
 
-class Clock : public Reportable {
+class Clock {
 public:
   explicit Clock();
   void check();
+
+  String getTime();
   void setTime(unsigned long unixTime);
-  String report() override;
+
+  float getTemperature();
 };
 
 #endif // __SEGMENT_CLOCK_CLOCK_H__

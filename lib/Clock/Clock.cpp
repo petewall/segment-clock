@@ -28,10 +28,14 @@ void Clock::check() {
       Serial.println("[Clock] Time not set");
     } else {
       Serial.print("[Clock] ");
-      Serial.println(rtc.now().timestamp());
+      Serial.println(this->getTime());
     }
     tick = false;
   }
+}
+
+String Clock::getTime() {
+  return rtc.now().timestamp();
 }
 
 void Clock::setTime(unsigned long unixTime) {
@@ -40,10 +44,6 @@ void Clock::setTime(unsigned long unixTime) {
   rtc.adjust(DateTime(unixTime));
 }
 
-String Clock::report() {
-  String output = "\"clock\":{";
-  output +=   "\"time\":\"" + rtc.now().timestamp() + "\",";
-  output +=   "\"temp\":" + String(rtc.getTemperature());
-  output += "}";
-  return output;
+float Clock::getTemperature() {
+  return rtc.getTemperature();
 }

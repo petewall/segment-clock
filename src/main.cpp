@@ -3,12 +3,12 @@
 #include <Clock.h>
 #include <NTP.h>
 #include <OTA.h>
-#include <Report.h>
+#include <WebInterface.h>
 
 Clock* rtClock;
 NTP* ntp;
 OTA* ota;
-Report* report;
+WebInterface* webInterface;
 bool wifiState = false;
 
 void setupWifi() {
@@ -38,9 +38,7 @@ void setup() {
   ntp = new NTP(ONE_DAY, rtClock);
   ota = new OTA(TEN_MINUTES);
 
-  std::vector<Reportable*> reportables;
-  reportables.push_back(rtClock);
-  report = new Report(reportables);
+  webInterface = new WebInterface(rtClock);
 }
 
 // cppcheck-suppress unusedFunction
@@ -51,5 +49,5 @@ void loop() {
   ntp->check(now);
   rtClock->check();
   ota->check(now);
-  report->update();
+  webInterface->process();
 }

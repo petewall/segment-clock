@@ -10,7 +10,8 @@ ICACHE_RAM_ATTR void clockTick() {
   tick = true;
 }
 
-Clock::Clock() {
+Clock::Clock(Display* display)
+: display(display) {
   if (!rtc.begin()) {
     Serial.println("[Clock] Failed to find RTC. Restarting...");
     delay(1000);
@@ -27,15 +28,15 @@ void Clock::check() {
     if (rtc.lostPower()) {
       Serial.println("[Clock] Time not set");
     } else {
-      Serial.print("[Clock] ");
-      Serial.println(this->getTime());
+      DateTime now = rtc.now();
+      this->display->updateTime(now.hour(), now.minute());
     }
     tick = false;
   }
 }
 
-String Clock::getTime() {
-  return rtc.now().timestamp();
+DateTime Clock::getTime() {
+  return rtc.now();
 }
 
 void Clock::setTime(unsigned long unixTime) {

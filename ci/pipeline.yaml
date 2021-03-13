@@ -81,8 +81,6 @@ jobs:
         - get: version
           passed:
             - bump-minor-version
-          params:
-            bump: final
         - get: source
           passed:
             - check
@@ -103,7 +101,6 @@ jobs:
       - put: version
         params:
           bump: patch
-          pre: dev
           file: version/version
 
   - name: bump-minor-version

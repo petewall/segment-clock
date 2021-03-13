@@ -1,13 +1,22 @@
 #include "WebInterface.h"
+#include <RTClib.h>
 #include <LittleFS.h>
 
 WebInterface::WebInterface(Clock* clock)
 : clock(clock), server(new ESP8266WebServer(80))
 {
-  this->server->on("/device/clock", HTTP_GET, [this]() {
+  this->server->on("/data", HTTP_GET, [this]() {
+    DateTime now = this->clock->getTime();
     String body = "{";
-    body += "\"time\": \"" + this->clock->getTime() + "\",";
-    body += "\"temperature\": " + String(this->clock->getTemperature());
+    body += "\"time\":{";
+    body +=   "\"year\":" + String(now.year()) + ",";
+    body +=   "\"month\":" + String(now.month()) + ",";
+    body +=   "\"day\":" + String(now.day()) + ",";
+    body +=   "\"hours\":" + String(now.hour()) + ",";
+    body +=   "\"minutes\":" + String(now.minute()) + ",";
+    body +=   "\"seconds\":" + String(now.second());
+    body += "},";
+    body += "\"temperature\":" + String(this->clock->getTemperature());
     body += "}";
     this->server->send(200, "application/json", body);
   });
@@ -22,6 +31,6 @@ WebInterface::WebInterface(Clock* clock)
   this->server->begin();
 }
 
-void WebInterface::process() {
+void WebInterface::check() {
   this->server->handleClient();
 }

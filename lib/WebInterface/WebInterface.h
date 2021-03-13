@@ -7,7 +7,7 @@
 class WebInterface {
 public:
   explicit WebInterface(Clock* clock);
-  void process();
+  void check();
 
 private:
   Clock* clock;

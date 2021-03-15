@@ -2,7 +2,7 @@
 #define __SEGMENT_CLOCK_CLOCK_H__
 
 #include <Display.h>
-#include <WString.h>
+#include <RTClib.h>
 
 class Clock {
 public:

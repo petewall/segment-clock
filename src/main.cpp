@@ -4,12 +4,14 @@
 #include <Display.h>
 #include <NTP.h>
 #include <OTA.h>
+#include <ProxSensor.h>
 #include <WebInterface.h>
 
 Clock* rtClock;
 Display* display;
 NTP* ntp;
 OTA* ota;
+ProxSensor* proxSensor;
 WebInterface* webInterface;
 bool wifiState = false;
 
@@ -37,6 +39,7 @@ void setup() {
   Serial.begin(115200);
   setupWifi();
 
+  proxSensor = new ProxSensor(250);
   display = new Display(FIVE_SECONDS);
   rtClock = new Clock(display);
   ntp = new NTP(ONE_DAY, rtClock);
@@ -53,6 +56,7 @@ void loop() {
   display->check(now);
   ntp->check(now);
   ota->check(now);
+  proxSensor->check(now);
   rtClock->check();
   webInterface->check();
 }

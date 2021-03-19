@@ -39,11 +39,11 @@ void setup() {
   Serial.begin(115200);
   setupWifi();
 
-  proxSensor = new ProxSensor(250);
   display = new Display(FIVE_SECONDS);
   rtClock = new Clock(display);
   ntp = new NTP(ONE_DAY, rtClock);
   ota = new OTA(TEN_MINUTES);
+  proxSensor = new ProxSensor(20, display);
 
   webInterface = new WebInterface(rtClock);
 }

@@ -7,6 +7,7 @@ public:
   virtual void check(unsigned long millis);
 
 protected:
+  void resetTimer();
   virtual bool run() = 0;
 
 private:

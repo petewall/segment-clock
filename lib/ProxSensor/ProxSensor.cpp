@@ -1,57 +1,58 @@
 #include "ProxSensor.h"
 #include <Arduino.h>
-#include <VCNL4010.h>
+#include <Adafruit_VCNL4010.h>
 
 #define PROXIMITY_ACTION_INTERRUPT_PIN D4
 
-VCNL4010 *sensor;
+Adafruit_VCNL4010 *sensor;
 
-// const float    PERCENT_CHANGE{0.10};  ///< Trigger percentage change
+#define PROXIMITY_LED_POWER 200
+#define PROXIMITY_THRESHOLD 2300
 
-volatile bool action = false;
-ICACHE_RAM_ATTR void proximityAction() {
-  action = true;
-}
+#define AMBIENT_LIGHT_AVERAGING 16
+unsigned short ambientLightMeasurementIndex = 0;
+uint16_t ambientLightMeasurements[AMBIENT_LIGHT_AVERAGING] = {0};
 
-ProxSensor::ProxSensor(unsigned long interval)
-: PeriodicAction(interval) {
-  sensor = new VCNL4010();
+ProxSensor::ProxSensor(unsigned long interval, Display* display)
+: PeriodicAction(interval), display(display), lastProximity(0), proximityTriggered(false) {
+  sensor = new Adafruit_VCNL4010();
   while (!sensor->begin()) {
     Serial.println("[ProxSensor] Failed to start VCNL4010");
   }
-  // sensor->setAmbientLight(8, 128);
-  sensor->setAmbientContinuous(true);
-  sensor->setProximityContinuous(true);
-  // sensor->setLEDmA(200);         // Boost power to Proximity sensor
-  // sensor.setProximityFreq(32);  // Sample 32 times per second
-  // uint16_t ProximityVal  = sensor.getProximity();  // Get the proximity reading
-  // uint16_t lowThreshold  = ProximityVal - (ProximityVal * PERCENT_CHANGE);  // low threshold value
-  // uint16_t highThreshold = ProximityVal + (ProximityVal * PERCENT_CHANGE);  // high threshold value
-  // sensor.setInterrupt(1,                // Trigger after 1 event
-  //                     false,            // Nothing on Proximity reading
-  //                     false,            // Nothing on Ambient light reading
-  //                     true,             // Interrupt on Proximity threshold
-  //                     false,            // Nothing on Ambient threshold
-  //                     lowThreshold,     // Low value is 90% of first reading
-  //                     highThreshold);   // High value is 110% of first value
-  // sensor.setProximityContinuous(true);  // Turn on continuous Proximity
-  // sensor.clearInterrupt(0);  // Reset status on VCNL4010
-  pinMode(PROXIMITY_ACTION_INTERRUPT_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(D0), proximityAction, LOW); // jump to vector when pin goes LOW
+
+  sensor->setLEDcurrent(PROXIMITY_LED_POWER);
+  sensor->setFrequency(VCNL4010_31_25);
 }
 
 bool ProxSensor::run() {
-  Serial.print("Ambient: ");
-  Serial.println(sensor->getAmbientLight());
+  ambientLightMeasurements[ambientLightMeasurementIndex] = sensor->readAmbient();
+  ambientLightMeasurementIndex = (ambientLightMeasurementIndex + 1) % AMBIENT_LIGHT_AVERAGING;
 
-  Serial.print("Proximity: ");
-  Serial.println(sensor->getProximity());
+  this->lastProximity = sensor->readProximity();
+  if (this->lastProximity > PROXIMITY_THRESHOLD) {
+    if (!this->proximityTriggered) {
+      this->proximityTriggered = true;
+      this->display->changeMode();
+    }
+  } else {
+    this->proximityTriggered = false;
+  }
 
-  // if (action) {
-  //   sensor.clearInterrupt(0);
-  //   action = false;
-  //   Serial.println("I saw that!");
-  // }
   return true;
 }
 
+uint16_t ProxSensor::getAmbientLight() {
+  uint16_t sum = 0;
+  for (int i = 0; i < AMBIENT_LIGHT_AVERAGING; i += 1) {
+    sum += ambientLightMeasurements[i];
+  }
+  return sum / AMBIENT_LIGHT_AVERAGING;
+}
+
+uint16_t ProxSensor::getProximity() {
+  return this->lastProximity;
+}
+
+bool ProxSensor::isProximityTriggered() {
+  return this->proximityTriggered;
+}

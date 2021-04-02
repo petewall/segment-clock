@@ -2,7 +2,8 @@
 #define __SEGMENT_CLOCK_DISPLAY_H__
 
 #include <PeriodicAction.h>
-#include <RTClib.h>
+#include <ctime>
+#include <stdint.h>
 
 typedef uint8_t display_mode_t;
 const display_mode_t MODE_OFF = 0;
@@ -13,7 +14,7 @@ const display_mode_t NUMBER_OF_MODES = 3;
 class Display : public PeriodicAction {
 public:
   explicit Display(unsigned long interval);
-  void setCurrentTime(DateTime newTime);
+  void setCurrentTime(time_t newTime);
 
   void changeMode();
   virtual bool run() override;
@@ -27,7 +28,7 @@ private:
   display_mode_t currentMode;
   display_mode_t defaultMode;
 
-  DateTime currentTime;
+  time_t currentTime;
 };
 
 #endif // __SEGMENT_CLOCK_DISPLAY_H__

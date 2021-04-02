@@ -13,6 +13,7 @@ protected:
 private:
   unsigned long interval;
   unsigned long next;
+  bool reset;
 };
 
 #endif // __SEGMENT_CLOCK_PERIODIC_ACTION_H__

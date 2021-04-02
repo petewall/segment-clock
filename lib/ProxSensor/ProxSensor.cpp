@@ -1,10 +1,10 @@
 #include "ProxSensor.h"
-#include <Arduino.h>
-#include <Adafruit_VCNL4010.h>
+#include "Compatibility.h"
+#include <VCNL4010.h>
 
 #define PROXIMITY_ACTION_INTERRUPT_PIN D4
 
-Adafruit_VCNL4010 *sensor;
+VCNL4010 *sensor;
 
 #define PROXIMITY_LED_POWER 200
 #define PROXIMITY_THRESHOLD 2300
@@ -15,9 +15,9 @@ uint16_t ambientLightMeasurements[AMBIENT_LIGHT_AVERAGING] = {0};
 
 ProxSensor::ProxSensor(unsigned long interval, Display* display)
 : PeriodicAction(interval), display(display), lastProximity(0), proximityTriggered(false) {
-  sensor = new Adafruit_VCNL4010();
+  sensor = new VCNL4010();
   while (!sensor->begin()) {
-    Serial.println("[ProxSensor] Failed to start VCNL4010");
+    printf("[ProxSensor] Failed to start VCNL4010\n");
   }
 
   sensor->setLEDcurrent(PROXIMITY_LED_POWER);

@@ -1,5 +1,5 @@
 #include "Display.h"
-#include <Arduino.h>
+#include "Compatibility.h"
 
 Display::Display(unsigned long interval)
 :PeriodicAction(interval),
@@ -7,23 +7,23 @@ separatorState(true),
 currentMode(MODE_OFF),
 defaultMode(MODE_OFF) {}
 
-void Display::setCurrentTime(DateTime newTime) {
+void Display::setCurrentTime(time_t newTime) {
   this->currentTime = newTime;
   this->separatorState = !this->separatorState;
   this->display();
 }
 
 void Display::changeMode() {
-  Serial.printf("[Display] Chaging from mode %d", this->currentMode);
+  printf("[Display] Chaging from mode %d", this->currentMode);
   this->currentMode = (this->currentMode + 1) % NUMBER_OF_MODES;
-  Serial.printf(" to mode %d\n", this->currentMode);
+  printf(" to mode %d\n", this->currentMode);
   this->resetTimer();
   this->display();
 }
 
 bool Display::run() {
   if (this->currentMode != this->defaultMode) {
-    Serial.printf("[Display] Back to mode %d\n", this->defaultMode);
+    printf("[Display] Back to mode %d\n", this->defaultMode);
     this->currentMode = this->defaultMode;
   }
   return true;
@@ -41,10 +41,12 @@ void Display::display() {
 }
 
 void Display::displayTime() {
-  Serial.printf("[Display] %02d%s%02d\n", this->currentTime.hour(), this->separatorState ? ":" : " ", this->currentTime.minute());
+  tm* now = localtime(&this->currentTime);
+  printf("[Display] %02d%s%02d\n", now->tm_hour, this->separatorState ? ":" : " ", now->tm_min);
 }
 
 char days_of_week[7][3] = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
 void Display::displayDay() {
-  Serial.printf("[Display] %s%02d\n", days_of_week[this->currentTime.dayOfTheWeek()], this->currentTime.day());
+  tm* now = localtime(&this->currentTime);
+  printf("[Display] %s%02d\n", days_of_week[now->tm_wday], now->tm_mday);
 }

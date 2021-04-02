@@ -1,12 +1,13 @@
 #include "PeriodicAction.h"
-#include <Arduino.h>
 
 PeriodicAction::PeriodicAction(unsigned long interval)
-: interval(interval), next(0)
+: interval(interval), next(0), reset(false)
 {}
 
 void PeriodicAction::check(unsigned long millis) {
-  if (millis > this->next) {
+  if (this->reset) {
+    this->next = millis + this->interval;
+  } else if (millis > this->next) {
     if (this->run()) {
       this->next = millis + this->interval;
     }
@@ -14,5 +15,5 @@ void PeriodicAction::check(unsigned long millis) {
 }
 
 void PeriodicAction::resetTimer() {
-  this->next = millis() + this->interval;
+  this->reset = true;
 }

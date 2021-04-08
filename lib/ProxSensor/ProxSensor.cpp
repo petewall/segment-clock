@@ -4,7 +4,6 @@
 
 #define PROXIMITY_ACTION_INTERRUPT_PIN D4
 
-VCNL4010 *sensor;
 
 #define PROXIMITY_LED_POWER 200
 #define PROXIMITY_THRESHOLD 2300
@@ -13,9 +12,8 @@ VCNL4010 *sensor;
 unsigned short ambientLightMeasurementIndex = 0;
 uint16_t ambientLightMeasurements[AMBIENT_LIGHT_AVERAGING] = {0};
 
-ProxSensor::ProxSensor(unsigned long interval, Display* display)
-: PeriodicAction(interval), display(display), lastProximity(0), proximityTriggered(false) {
-  sensor = new VCNL4010();
+ProxSensor::ProxSensor(unsigned long interval, Display* display, VCNL4010* sensor)
+: PeriodicAction(interval), display(display), sensor(sensor), lastProximity(0), proximityTriggered(false) {
   while (!sensor->begin()) {
     printf("[ProxSensor] Failed to start VCNL4010\n");
   }

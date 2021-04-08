@@ -14,9 +14,10 @@ const display_mode_t NUMBER_OF_MODES = 3;
 class Display : public PeriodicAction {
 public:
   explicit Display(unsigned long interval);
-  void setCurrentTime(time_t newTime);
+  virtual ~Display() {}
 
-  void changeMode();
+  virtual void setCurrentTime(time_t newTime);
+  virtual void changeMode();
   virtual bool run() override;
 
 private:
@@ -30,5 +31,16 @@ private:
 
   time_t currentTime;
 };
+
+#ifndef ESP8266
+#include "gmock/gmock.h"
+
+class MockDisplay : public Display {
+public:
+  MockDisplay() : Display(0) {}
+  MOCK_METHOD(void, setCurrentTime, (time_t newTime), (override));
+  MOCK_METHOD(void, changeMode, (), (override));
+};
+#endif // ESP8266
 
 #endif // __SEGMENT_CLOCK_DISPLAY_H__

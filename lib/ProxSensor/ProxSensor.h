@@ -3,11 +3,12 @@
 
 #include <PeriodicAction.h>
 #include <Display.h>
+#include <VCNL4010.h>
 #include <stdint.h>
 
 class ProxSensor : public PeriodicAction {
 public:
-  explicit ProxSensor(unsigned long interval, Display* display);
+  explicit ProxSensor(unsigned long interval, Display* display, VCNL4010* sensor);
 
   virtual bool run() override;
 
@@ -17,6 +18,7 @@ public:
 
 private:
   Display* display;
+  VCNL4010* sensor;
   uint16_t lastProximity;
   bool proximityTriggered;
 };

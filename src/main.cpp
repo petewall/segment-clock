@@ -40,10 +40,10 @@ void setup() {
   setupWifi();
 
   display = new Display(FIVE_SECONDS);
-  rtClock = new Clock(display);
+  rtClock = new Clock(display, new DS3231());
   ntp = new NTP(ONE_DAY, rtClock);
   ota = new OTA(TEN_MINUTES);
-  proxSensor = new ProxSensor(20, display);
+  proxSensor = new ProxSensor(20, display, new VCNL4010());
 
   webInterface = new WebInterface(rtClock);
 }

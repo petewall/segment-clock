@@ -1,6 +1,7 @@
 #include "ProxSensor.h"
 #include "Compatibility.h"
 #include <VCNL4010.h>
+#include <numeric>
 
 #define PROXIMITY_ACTION_INTERRUPT_PIN D4
 
@@ -40,10 +41,7 @@ bool ProxSensor::run() {
 }
 
 uint16_t ProxSensor::getAmbientLight() {
-  uint16_t sum = 0;
-  for (int i = 0; i < AMBIENT_LIGHT_AVERAGING; i += 1) {
-    sum += ambientLightMeasurements[i];
-  }
+  uint16_t sum = std::accumulate(ambientLightMeasurements, ambientLightMeasurements + AMBIENT_LIGHT_AVERAGING, 0);
   return sum / AMBIENT_LIGHT_AVERAGING;
 }
 

@@ -1,4 +1,3 @@
-// #include <unity.h>
 #include <Compatibility.h>
 #include <Clock.h>
 #include "gmock/gmock.h"

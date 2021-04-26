@@ -36,6 +36,17 @@
     "tuple": "cpp",
     "type_traits": "cpp",
     "utility": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "__bit_reference": "cpp",
+    "__hash_table": "cpp",
+    "__split_buffer": "cpp",
+    "__tree": "cpp",
+    "filesystem": "cpp",
+    "iterator": "cpp",
+    "map": "cpp",
+    "set": "cpp",
+    "string_view": "cpp",
+    "unordered_set": "cpp",
+    "chrono": "cpp"
   }
 }

@@ -3,6 +3,14 @@
 clean:
 	rm -rf .pio data
 
+~/.ssh/id_github:
+	setup-github-ssh-key.sh
+
+.pio/libdeps/testing/PeriodicAction/library.json: ~/.ssh/id_github
+	pio lib install
+
+deps: .pio/libdeps/testing/PeriodicAction/library.json
+
 SRC_FILES := $(shell find . -path ./test -prune -false -o -name "*.cpp" -o -name "*.h")
 TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
 

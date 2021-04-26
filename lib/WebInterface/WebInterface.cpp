@@ -1,5 +1,4 @@
 #include "WebInterface.h"
-#include <RTClib.h>
 #include <LittleFS.h>
 
 WebInterface::WebInterface(Clock* clock)

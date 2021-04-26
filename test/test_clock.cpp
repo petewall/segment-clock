@@ -1,18 +1,19 @@
 #include <Compatibility.h>
 #include <Clock.h>
+#include <MockDisplay.h>
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 using ::testing::Return;
-
-DS3231* rtc;
-MockDisplay* display;
 
 extern uint8_t mock_interrupt_pin;
 extern int mock_interrupt_mode;
 extern volatile bool tick;
 
 class ClockTest : public ::testing::Test {
- protected:
+protected:
+  DS3231* rtc;
+  MockDisplay* display;
+
   ClockTest() {}
   ~ClockTest() override {}
 
@@ -89,9 +90,4 @@ TEST_F(ClockTest, CallingCheckWillUpdateDisplayTime) {
   clock->check();
 
   EXPECT_EQ(tick, false);
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

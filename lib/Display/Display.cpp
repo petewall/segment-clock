@@ -14,11 +14,15 @@ void Display::setCurrentTime(time_t newTime) {
 }
 
 void Display::changeMode() {
-  printf("[Display] Chaging from mode %d", this->currentMode);
+  printf("[Display] Chaging from mode %d\n", this->currentMode);
   this->currentMode = (this->currentMode + 1) % NUMBER_OF_MODES;
   printf(" to mode %d\n", this->currentMode);
   this->resetTimer();
   this->display();
+}
+
+display_mode_t Display::getMode() {
+  return this->currentMode;
 }
 
 bool Display::run() {

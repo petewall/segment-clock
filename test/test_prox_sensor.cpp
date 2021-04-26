@@ -1,14 +1,16 @@
 #include <Compatibility.h>
+#include <MockDisplay.h>
 #include <ProxSensor.h>
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 using ::testing::Return;
 
-VCNL4010* sensor;
-MockDisplay* display;
 
 class ProxSensorTest : public ::testing::Test {
  protected:
+  VCNL4010* sensor;
+  MockDisplay* display;
+
   ProxSensorTest() {}
   ~ProxSensorTest() override {}
 
@@ -106,9 +108,4 @@ TEST_F(ProxSensorTest, ProximityTriggerResetsProperly) {
   EXPECT_EQ(triggered1, false);
   EXPECT_EQ(triggered2, true);
   EXPECT_EQ(triggered3, false);
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }

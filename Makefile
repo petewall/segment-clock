@@ -31,7 +31,7 @@ test: .pio/libdeps/depspulled ${SRC_FILES} ${TEST_FILES}
 .pio/build/segment-clock/firmware.bin: platformio.ini ${SRC_FILES}
 	$(call invoke-pio,run,--verbose)
 
-build: .pio/build/segment-clock/firmware.bin
+build: .pio/libdeps/depspulled .pio/build/segment-clock/firmware.bin
 
 check: .pio/libdeps/depspulled ${SRC_FILES}
 	pio check --verbose --skip-packages

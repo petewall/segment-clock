@@ -3,7 +3,9 @@ platform: linux
 
 params:
   FIRMWARE_TYPE: segment-clock
-  OTA_HOST:
+  GITHUB_SSH_KEY:
+  OTA_HOSTNAME:
+  OTA_PORT:
   WIFI_SSID:
   WIFI_PASSWORD:
 

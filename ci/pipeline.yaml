@@ -62,7 +62,8 @@ jobs:
           params:
             FIRMEARE_VERSION: 0.0.0
             GITHUB_SSH_KEY: ((github-repo-key))
-            OTA_HOST: http://wallserver.local:8266
+            OTA_HOSTNAME: http://wallserver.local
+            OTA_PORT: "8266"
             WIFI_SSID: fake-ssid
             WIFI_PASSWORD: fake-password
           inputs:
@@ -78,7 +79,8 @@ jobs:
           params:
             FIRMEARE_VERSION: 0.0.0
             GITHUB_SSH_KEY: ((github-repo-key))
-            OTA_HOST: http://wallserver.local:8266
+            OTA_HOSTNAME: http://wallserver.local
+            OTA_PORT: "8266"
             WIFI_SSID: fake-ssid
             WIFI_PASSWORD: fake-password
           inputs:
@@ -107,7 +109,9 @@ jobs:
         image: platformio
         file: source/ci/tasks/build.yml
         params:
-          OTA_HOST: http://wallserver.local:8266
+          GITHUB_SSH_KEY: ((github-repo-key))
+          OTA_HOSTNAME: http://wallserver.local
+          OTA_PORT: "8266"
           WIFI_SSID: ((wifi-ssid))
           WIFI_PASSWORD: ((wifi-password))
       - task: upload-firmware

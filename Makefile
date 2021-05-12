@@ -6,10 +6,11 @@ clean:
 ~/.ssh/id_github:
 	setup-github-ssh-key.sh
 
-.pio/libdeps/testing/PeriodicAction/library.json: ~/.ssh/id_github
+.pio/libdeps/depspulled: ~/.ssh/id_github
 	pio lib install
+	touch .pio/libdeps/depspulled
 
-deps: .pio/libdeps/testing/PeriodicAction/library.json
+deps: .pio/libdeps/depspulled
 
 SRC_FILES := $(shell find . -path ./test -prune -false -o -name "*.cpp" -o -name "*.h")
 TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
@@ -17,13 +18,14 @@ TEST_FILES := $(shell find ./test -name "*.cpp" -o -name "*.h")
 define invoke-pio
 	FIRMWARE_TYPE="${FIRMWARE_TYPE}" \
 	FIRMWARE_VERSION="${FIRMWARE_VERSION}" \
-	OTA_HOST="http://wallserver.local:8266" \
+	OTA_HOSTNAME="http://wallserver.local" \
+	OTA_PORT="8266" \
 	WIFI_SSID="${WIFI_SSID}" \
 	WIFI_PASSWORD="${WIFI_PASSWORD}" \
 		pio $1 --environment segment-clock $2 $3
 endef
 
-test: ${SRC_FILES} ${TEST_FILES}
+test: .pio/libdeps/depspulled ${SRC_FILES} ${TEST_FILES}
 	pio test --environment testing --verbose
 
 .pio/build/segment-clock/firmware.bin: platformio.ini ${SRC_FILES}
@@ -31,8 +33,8 @@ test: ${SRC_FILES} ${TEST_FILES}
 
 build: .pio/build/segment-clock/firmware.bin
 
-check: ${SRC_FILES}
-	$(call invoke-pio,check,--verbose,--skip-packages)
+check: .pio/libdeps/depspulled ${SRC_FILES}
+	pio check --verbose --skip-packages
 
 upload:
 	$(call invoke-pio,run,--target,upload)

@@ -3,32 +3,19 @@
 #include <Clock.h>
 #include <Display.h>
 #include <NTP.h>
-#include <OTA.h>
+#include <OTAClient.h>
 #include <ProxSensor.h>
+#include <ReliableNetwork.h>
 #include <WebInterface.h>
 
 Clock* rtClock;
 Display* display;
 NTP* ntp;
-OTA* ota;
+OTAClient* ota;
 ProxSensor* proxSensor;
+ReliableNetwork *network;
 WebInterface* webInterface;
 bool wifiState = false;
-
-void setupWifi() {
-  WiFi.mode(WIFI_STA);
-  Serial.println("[WiFi] Connecting to wireless network \"" WIFI_SSID "\"...");
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-}
-
-void checkWifi() {
-  if (!wifiState && WiFi.status() == WL_CONNECTED) {
-    Serial.println("[WiFi] WiFi connected");
-    Serial.print("[WiFi] IP address: ");
-    Serial.println(WiFi.localIP());
-    wifiState = true;
-  }
-}
 
 #define FIVE_SECONDS 5 * 1000
 #define TEN_MINUTES 10 * 60 * 1000
@@ -37,12 +24,14 @@ void checkWifi() {
 // cppcheck-suppress unusedFunction
 void setup() {
   Serial.begin(115200);
-  setupWifi();
+
+  network = new ReliableNetwork(WIFI_SSID, WIFI_PASSWORD);
+  network->connect();
 
   display = new Display(FIVE_SECONDS);
   rtClock = new Clock(display, new DS3231());
   ntp = new NTP(ONE_DAY, rtClock);
-  ota = new OTA(TEN_MINUTES);
+  ota = new OTAClient(TEN_MINUTES, OTA_HOSTNAME, OTA_PORT, network);
   proxSensor = new ProxSensor(20, display, new VCNL4010());
 
   webInterface = new WebInterface(rtClock);
@@ -52,8 +41,8 @@ void setup() {
 void loop() {
   unsigned long now = millis();
 
-  checkWifi();
   display->check(now);
+  network->check(now);
   ntp->check(now);
   ota->check(now);
   proxSensor->check(now);

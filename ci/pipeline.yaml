@@ -49,18 +49,19 @@ resources:
   #     access_token: ((github-access-token))
 
 jobs:
-  - name: check
+  - name: test
     plan:
       - in_parallel:
         - get: platformio
         - get: source
           trigger: true
-      - task: check
+      - task: run-check
         image: platformio
         config:
           platform: linux
           params:
             FIRMEARE_VERSION: 0.0.0
+            GITHUB_SSH_KEY: ((github-repo-key))
             OTA_HOST: http://wallserver.local:8266
             WIFI_SSID: fake-ssid
             WIFI_PASSWORD: fake-password
@@ -70,6 +71,22 @@ jobs:
             dir: source
             path: make
             args: ["check"]
+      - task: run-test
+        image: platformio
+        config:
+          platform: linux
+          params:
+            FIRMEARE_VERSION: 0.0.0
+            GITHUB_SSH_KEY: ((github-repo-key))
+            OTA_HOST: http://wallserver.local:8266
+            WIFI_SSID: fake-ssid
+            WIFI_PASSWORD: fake-password
+          inputs:
+            - name: source
+          run:
+            dir: source
+            path: make
+            args: ["test"]
 
   - name: build-firmware
     serial_groups: [version]
@@ -77,13 +94,13 @@ jobs:
       - in_parallel:
         - get: platformio
           passed:
-            - check
+            - test
         - get: version
           passed:
             - bump-minor-version
         - get: source
           passed:
-            - check
+            - test
           trigger: true
         - get: ota-source
       - task: build

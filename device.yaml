@@ -1,0 +1,36 @@
+esphome:
+  name: segment-clock
+  comment: 17 Segment Clock
+
+esp8266:
+  board: d1_mini
+
+logger:
+  level: DEBUG
+
+prometheus:
+  include_internal: true
+  # relabel:
+  #   firmware:
+  #     id: firmware
+  #     name: "segment-clock"
+
+wifi:
+  ssid: Planet Express
+  password: !secret pass
+
+web_server:
+  port: 80
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+
+time:
+  - platform: ds1307
+    id: rtc
